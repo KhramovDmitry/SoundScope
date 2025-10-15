@@ -9,9 +9,6 @@ class Community:
         pygame.init()
         pygame.font.init()
 
-        self.oData = Data.Data()
-        self.data = self.oData.load_data('account_data.json')
-
         self.screen: pygame.Surface = screen
         self.width, self.height = c.width, c.height
         self.Height = c.Height
@@ -47,19 +44,19 @@ class Community:
                                               filename=c.mini_exit_button,
                                               center_x=self.meb_x, center_y=self.meb_y,
                                               width=self.meb_width, height=self.meb_height,
-                                              layername=c.light_button_layer3, smooth=True)
+                                              layername=c.light_button_layer3, smooth=c.smooth)
         self.mini_exit_button_rect = self.mini_exit_button.set_rect()
         self.max_button = Button.Button(screen=self.screen, 
                                         filename=c.max_button,
                                         center_x=self.max_button_x, center_y=self.max_button_y, 
                                         width=self.community_button_width, height=self.community_button_height,
-                                        layername=c.community_button_layer, smooth=True)
+                                        layername=c.community_button_layer, smooth=c.smooth)
         self.max_button_rect = self.max_button.set_rect()
         self.telegram_button = Button.Button(screen=self.screen, 
                                         filename=c.telegram_button,
                                         center_x=self.telegram_button_x, center_y=self.telegram_button_y, 
                                         width=self.community_button_width, height=self.community_button_height,
-                                        layername=c.community_button_layer, smooth=True)
+                                        layername=c.community_button_layer, smooth=c.smooth)
         self.telegram_button_rect = self.telegram_button.set_rect()
 
     def check_buttons(self, mouse_x, mouse_y):

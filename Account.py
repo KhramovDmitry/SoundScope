@@ -60,19 +60,19 @@ class Account:
                                               filename=c.mini_exit_button,
                                               center_x=self.meb_x, center_y=self.meb_y,
                                               width=self.meb_width, height=self.meb_height,
-                                              layername=c.light_button_layer3, smooth=True)
+                                              layername=c.light_button_layer3, smooth=c.smooth)
         self.mini_exit_button_rect = self.mini_exit_button.set_rect()
         self.mini_ok1_button = Button.Button(screen=self.screen,
                                               filename=c.mini_ok_button,
                                               center_x=self.mob1_x, center_y=self.mob1_y,
                                               width=self.mob1_width, height=self.mob1_height,
-                                              layername=c.light_button_layer3, smooth=True)
+                                              layername=c.light_button_layer3, smooth=c.smooth)
         self.mini_ok1_button_rect = self.mini_ok1_button.set_rect()
         self.mini_ok2_button = Button.Button(screen=self.screen,
                                               filename=c.mini_ok_button,
                                               center_x=self.mob2_x, center_y=self.mob2_y,
                                               width=self.mob2_width, height=self.mob2_height,
-                                              layername=c.light_button_layer3, smooth=True)
+                                              layername=c.light_button_layer3, smooth=c.smooth)
         self.mini_ok2_button_rect = self.mini_ok2_button.set_rect()
 
     

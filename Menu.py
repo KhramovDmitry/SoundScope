@@ -44,38 +44,38 @@ class Menu:
                                                   filename=c.my_playlist_button,
                                                   center_x=self.mpb_x, center_y=self.mpb_y,
                                                   width=self.mpb_width, height=self.mpb_height,
-                                                  layername=c.light_button_layer, smooth=True)
+                                                  layername=c.light_button_layer, smooth=c.smooth)
         self.my_playlist_button_rect = self.my_playlist_button.set_rect()
         self.load_file_button = Button.Button(screen=self.screen,
                                                   filename=c.load_file_button,
                                                   center_x=self.lfb_x, center_y=self.lfb_y,
                                                   width=self.lfb_width, height=self.lfb_height,
-                                                  layername=c.light_button_layer, smooth=True)
+                                                  layername=c.light_button_layer, smooth=c.smooth)
         self.load_file_button_rect = self.load_file_button.set_rect()
         self.my_creations_button = Button.Button(screen=self.screen,
                                                   filename=c.my_creations_button,
                                                   center_x=self.mcb_x, center_y=self.mcb_y,
                                                   width=self.mcb_width, height=self.mcb_height,
-                                                  layername=c.light_button_layer, smooth=True)
+                                                  layername=c.light_button_layer, smooth=c.smooth)
         self.my_creations_button_rect = self.my_creations_button.set_rect()
         #small.buttons
         self.account_button = Button.Button(screen=self.screen,
                                             filename=c.account_button,
                                             center_x=self.ab_x, center_y=self.ab_y,
                                             width=self.ab_width, height=self.ab_height,
-                                            layername=c.light_button_layer2, smooth=True)
+                                            layername=c.light_button_layer2, smooth=c.smooth)
         self.account_button_rect = self.account_button.set_rect()
         self.settings_button = Button.Button(screen=self.screen,
                                             filename=c.settings_button,
                                             center_x=self.sb_x, center_y=self.sb_y,
                                             width=self.sb_width, height=self.sb_height,
-                                            layername=c.light_button_layer2, smooth=True)
+                                            layername=c.light_button_layer2, smooth=c.smooth)
         self.settings_button_rect = self.settings_button.set_rect()
         self.info_button = Button.Button(screen=self.screen,
                                             filename=c.info_button,
                                             center_x=self.ib_x, center_y=self.ib_y,
                                             width=self.ib_width, height=self.ib_height,
-                                            layername=c.light_button_layer2, smooth=True)
+                                            layername=c.light_button_layer2, smooth=c.smooth)
         self.info_button_rect = self.info_button.set_rect()
 
     

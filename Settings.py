@@ -12,9 +12,6 @@ class Settings:
         self.width, self.height = c.width, c.height
         self.Height = c.Height
 
-        self.oData = Data.Data()
-        self.settings_data = self.oData.load_data('settings_data.json')
-
         self.meb_x, self.meb_y = c.meb_x, c.meb_y
         self.mob1_x, self.mob1_y = c.mob1_x, c.mob1_y
         self.mob2_x, self.mob2_y = c.mob2_x, c.mob2_y
@@ -33,28 +30,28 @@ class Settings:
                                               filename=c.mini_exit_button,
                                               center_x=self.meb_x, center_y=self.meb_y,
                                               width=self.meb_width, height=self.meb_height,
-                                              layername=c.light_button_layer3, smooth=True)
+                                              layername=c.light_button_layer3, smooth=c.smooth)
         self.mini_exit_button_rect = self.mini_exit_button.set_rect()
 
         self.graphics_button = Button.Button(self.screen, c.graphics_button,
                                             c.gb_x, c.gb_y, 
                                             c.gb_width, c.SB_height, 
-                                            c.gb_layer, True)
+                                            c.gb_layer, c.smooth)
         self.graphics_button_rect = self.graphics_button.set_rect()
         self.sound_button = Button.Button(self.screen, c.sound_button,
                                             c.soundbutton_x, c.soundbutton_y, 
                                             c.soundbutton_width, c.SB_height, 
-                                            c.sb_layer, True)
+                                            c.sb_layer, c.smooth)
         self.sound_button_rect = self.sound_button.set_rect()
         self.help_button = Button.Button(self.screen, c.help_button,
                                             c.hb_x, c.hb_y, 
                                             c.hb_width, c.SB_height, 
-                                            c.hb_layer, True)
+                                            c.hb_layer, c.smooth)
         self.help_button_rect = self.help_button.set_rect()
         self.community_button = Button.Button(self.screen, c.community_button,
                                             c.cb_x, c.cb_y, 
                                             c.cb_width, c.SB_height, 
-                                            c.cb_layer, True)
+                                            c.cb_layer, c.smooth)
         self.community_button_rect = self.community_button.set_rect()
 
 

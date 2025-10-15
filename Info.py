@@ -33,13 +33,13 @@ class Info:
                                               filename=c.mini_exit_button,
                                               center_x=self.meb_x, center_y=self.meb_y,
                                               width=self.meb_width, height=self.meb_height,
-                                              layername=c.light_button_layer3, smooth=True)
+                                              layername=c.light_button_layer3, smooth=c.smooth)
         self.mini_exit_button_rect = self.mini_exit_button.set_rect()
 
         self.website_button = Button.Button(self.screen, c.website_button,
                                             self.wb_x, self._wb_y,
                                             self.wb_width, self.wb_height,
-                                            c.community_button_layer, smooth=True)
+                                            c.community_button_layer, smooth=c.smooth)
         self.website_button_rect = self.website_button.set_rect()
 
         self.info_text = c.info_text

@@ -1,6 +1,6 @@
 import pygame
 import ConfigWindow
-import Menu, Account, Settings, Community, Info
+import Menu, Account, Settings, Community, Graphics, Info
 import Data
 from CleanInput import clean_input
 import config as c
@@ -19,6 +19,8 @@ class Application:
         self.__new_extra2_state = None
         self.__entry_event = None
         self.__previous_entry_event = c.previous_entry_event
+        self.__graphics_event = None
+        self.__graphics2_event = None
         self.__menu_touchable = True
         self.__settings_touchable = True
 
@@ -33,23 +35,24 @@ class Application:
 
         self.__oConfigWindow.configure_window()
         self.__width, self.__height = c.width, c.height
+        self.__true_width, self.__true_height = c.true_width, c.true_height
 
-        #if self.data['fullscreen']:
-        #    self.__screen = pygame.display.set_mode((self.__width, self.__height), pygame.FULLSCREEN)
-        #else:
-        #    self.__screen = pygame.display.set_mode((self.__width, self.__height))
-        self.__screen = pygame.display.set_mode((self.__width, self.__height))
         self.__fullscreen = self.data['fullscreen']
+
+        if self.__fullscreen and self.data['screen_resolution'] == False:
+            self.__screen = pygame.display.set_mode((self.__width, self.__height), pygame.FULLSCREEN)
+        else:
+            self.__screen = pygame.display.set_mode((self.__width, self.__height))
 
         self.__fps = 120
         self.__clock = pygame.time.Clock()
-
 
         #config.menu.classes
         self.__oMenu = Menu.Menu(self.__screen)
         self.__oAccount = Account.Account(self.__screen)
         self.__oSettings = Settings.Settings(self.__screen)
         self.__oCommunity = Community.Community(self.__screen)
+        self.__oGraphics = Graphics.Graphics(self.__screen)
         self.__oInfo = Info.Info(self.__screen)
 
         #work.end.flag
@@ -75,7 +78,7 @@ class Application:
                 self.oData.dump_data('account_data.json', self.account_data)
                 self.__work_end = True
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_f and (self.__entry_event == 'N' or self.__entry_event == None):
+                if event.key == pygame.K_f and (self.__entry_event == 'N' or self.__entry_event == None) and self.data['screen_resolution'] == False:
                     self.__fullscreen = not self.__fullscreen
                     if self.__fullscreen:
                         self.__screen = pygame.display.set_mode((self.__width, self.__height), pygame.FULLSCREEN)
@@ -101,6 +104,9 @@ class Application:
                         self.__extra_state, self.__menu_touchable = None, True
                     if self.__extra2_state == 'community':
                         self.__extra2_state, self.__settings_touchable = None, True
+                    if self.__extra2_state == 'graphics':
+                        self.__extra2_state, self.__settings_touchable = None, True
+                        self.__graphics_event, self.__graphics2_event = None, None
                     if self.__extra_state == 'info':
                         self.__extra_state, self.__menu_touchable = None, True
 
@@ -187,6 +193,52 @@ class Application:
                     self.__extra2_state, self.__extra_state = None, 'settings'
                     self.__settings_touchable = True
         
+        #------------------GRAPHICS-----------------#
+            if self.__extra2_state == 'graphics':
+                self.__new_extra2_state = self.__oGraphics.extra2_event(event, self.__mouse_x, self.__mouse_y)
+                self.__new_graphics_event = self.__oGraphics.buttons_event(event, self.__mouse_x, self.__mouse_y)
+                self.__new2_graphics_event = self.__oGraphics.buttons2_event(event, self.__mouse_x, self.__mouse_y)
+                self.__save_event = self.__oGraphics.save_changes(event, self.__mouse_x, self.__mouse_y)
+                if self.__new_extra2_state == None:
+                    self.__extra2_state, self.__extra_state = None, 'settings'
+                    self.__settings_touchable = True
+                if self.__new_graphics_event == '1':
+                    self.__graphics_event = '1'
+                if self.__new_graphics_event == '2':
+                    self.__graphics_event = '2'
+                if self.__new_graphics_event == '3':
+                    self.__graphics_event = '3'
+                if self.__new_graphics_event == '4':
+                    self.__graphics_event = '4'
+                if self.__new2_graphics_event == 'yes':
+                    self.__graphics2_event = 'yes'
+                if self.__new2_graphics_event == 'no':
+                    self.__graphics2_event = 'no'
+
+                if self.__save_event == 'SAVE':
+                    if self.__graphics_event == '1':
+                        c.width, c.height = (self.__true_width - self.__true_width//10), (self.__true_height - self.__true_height//10)
+                        self.data['screen_resolution'] = f'{c.width} {c.height}'
+                        self.oData.dump_data('app_data.json', self.data)
+                    if self.__graphics_event == '2':
+                        c.width, c.height = (self.__true_width - self.__true_width//5), (self.__true_height - self.__true_height//5)
+                        self.data['screen_resolution'] = f'{c.width} {c.height}'
+                        self.oData.dump_data('app_data.json', self.data)
+                    if self.__graphics_event == '3':
+                        c.width, c.height = (self.__true_width - self.__true_width//3), (self.__true_height - self.__true_height//3)
+                        self.data['screen_resolution'] = f'{c.width} {c.height}'
+                        self.oData.dump_data('app_data.json', self.data)
+                    if self.__graphics_event == '4':
+                        c.width, c.height = self.__true_width, self.__true_height
+                        self.data['screen_resolution'] = False
+                        self.oData.dump_data('app_data.json', self.data)
+                    if self.__graphics2_event == 'no':
+                        self.data['smooth'] = False
+                        self.oData.dump_data('app_data.json', self.data)
+                    if self.__graphics2_event == 'yes':
+                        self.data['smooth'] = True
+                        self.oData.dump_data('app_data.json', self.data)
+        
         #--------------------INFO-------------------#
             if self.__extra_state == 'info':
                 self.__new_extra_state = self.__oInfo.extra_event(event, self.__mouse_x, self.__mouse_y)
@@ -212,6 +264,8 @@ class Application:
                 self.__oSettings.check_buttons(self.__mouse_x, self.__mouse_y)
                 if self.__extra2_state == 'graphics':
                     self.__settings_touchable = False
+                    self.__oGraphics.draw()
+                    self.__oGraphics.check_buttons(self.__mouse_x, self.__mouse_y)
                 if self.__extra2_state == 'sound':
                     self.__settings_touchable = False
                 if self.__extra2_state == 'help':
