@@ -1,11 +1,8 @@
-import pygame
 import os
 
 class GetFilePath:
     def __init__(self):
-        pygame.init()
-        pygame.mixer.init()
-        pygame.font.init()
+
         self.current_path = os.path.dirname(__file__)
 
     def load_file(self, foldername: str, filename: str) -> str:

@@ -37,4 +37,4 @@ class SongInfo:
         elif option == "strength":
             return self.strength
         elif option == "all":
-            return (self.key, self.scale, self.strength)
+            return [self.key, self.scale, self.strength]

@@ -1,5 +1,4 @@
 import pygame
-import Data
 import Button
 import config as c
 

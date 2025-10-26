@@ -244,6 +244,26 @@ ab_pos = width//2, height//2 + height//5
 rt_pos = width//2, height//2 + height//3.9
 #------------------------------------------------------------------------#
 
+#----------------------------------HELP----------------------------------#
+powered_by_python = oGetFilePath.load_file('sprites', 'pygame_logo.PNG')
+
+help_text__ = 'Помощь'
+help_text = TTC_regular_menu.render(help_text__, smooth, SS_WHITE)
+support_text = TTC_regular_menu.render('Контакты Тех.Поддержки', smooth, SS_WHITE)
+gmail_text = TTC_demibold_community.render('soundscopehelp@gmail.com', smooth, SS_BLUE)
+
+supt_x, supt_y = width//2, height//2 - height//18
+gmailt_x, gmailt_y = width//2, height//2
+
+pbp_size = width//15.36, height//25.1
+pbp_pos = width//2 + width//6.5, height//2 + height//7
+#------------------------------------------------------------------------#
+
+#---------------------------------SOUNDS---------------------------------#
+sounds_text = TTC_regular_menu.render('Звук', smooth, SS_WHITE)
+on_text = '×'
+
+
 #----------------------------------INFO----------------------------------#
 website_button = oGetFilePath.load_file('sprites', 'website_button.png')
 
@@ -258,3 +278,21 @@ wt_x, wt_y = width//2, height//2 - height//80 + height//10 - height//45
 
 website_size = width//30*2, width//30*2
 website_pos = width//2, height//2 - height//50
+#------------------------------------------------------------------------#
+
+#-------------------------------LOADFILE---------------------------------#
+choose_file_button = oGetFilePath.load_file('sprites', 'choose_file_button.png')
+choose_file_layer = oGetFilePath.load_file('sprites', 'choose_file_layer.png')
+error_cover = oGetFilePath.load_file('sprites', 'error_cover.png')
+cover_layer = oGetFilePath.load_file('sprites', 'cover_layer.png')
+cfb_x, cfb_y = width//2, height//2
+cfb_width, cfb_height = width//5.5, height//7.2
+
+#-----------------#
+play_process = None
+play_button = oGetFilePath.load_file('sprites', 'play_button.png')
+pause_button = oGetFilePath.load_file('sprites', 'pause_button.png')
+song_frame = oGetFilePath.load_file('sprites', 'song_frame.png')
+glow_1 = oGetFilePath.load_file('sprites', 'glow_1.png')
+glow_2 = oGetFilePath.load_file('sprites', 'glow_2.png')
+#-----------------#

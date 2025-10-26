@@ -1,12 +1,18 @@
-import pygame
+import pygame, time, multiprocessing as mp
 import ConfigWindow
-import Menu, Account, Settings, Community, Graphics, Info
+import Menu, Account, Settings, Community, Graphics, Help, Sounds, Info
+import LoadFile
 import Data
+import PlayProcess
 from CleanInput import clean_input
 import config as c
 
+play_process = None
+
 class Application:
     def __init__(self):
+        global play_process
+
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
@@ -53,7 +59,12 @@ class Application:
         self.__oSettings = Settings.Settings(self.__screen)
         self.__oCommunity = Community.Community(self.__screen)
         self.__oGraphics = Graphics.Graphics(self.__screen)
+        self.__oHelp = Help.Help(self.__screen)
+        self.__oSounds = Sounds.Sounds(self.__screen)
         self.__oInfo = Info.Info(self.__screen)
+
+        #config.loadfile.classes
+        self.__oLoadFile = LoadFile.LoadFile(self.__screen)
 
         #work.end.flag
         self.__work_end = False
@@ -67,8 +78,8 @@ class Application:
             self.__mouse_x, self.__mouse_y = pygame.mouse.get_pos()
 
             self.__check_logic()
-            self.__check_events()
             self.__draw()
+            self.__check_events()
 
     #check.events
     def __check_events(self):
@@ -109,6 +120,8 @@ class Application:
                         self.__graphics_event, self.__graphics2_event = None, None
                     if self.__extra_state == 'info':
                         self.__extra_state, self.__menu_touchable = None, True
+                    if self.__current_state == 'load_file':
+                        self.__current_state = 'menu'
 
         #--------------------MENU-------------------#
             if self.__current_state == 'menu':
@@ -238,6 +251,20 @@ class Application:
                     if self.__graphics2_event == 'yes':
                         self.data['smooth'] = True
                         self.oData.dump_data('app_data.json', self.data)
+
+        #--------------------HELP-------------------#
+            if self.__extra2_state == 'help':
+                self.__new_extra2_state = self.__oHelp.extra2_event(event, self.__mouse_x, self.__mouse_y)
+                if self.__new_extra2_state == None:
+                    self.__extra2_state, self.__extra_state = None, 'settings'
+                    self.__settings_touchable = True
+
+        #-------------------SOUNDS------------------#
+            if self.__extra2_state == 'sound':
+                self.__new_extra2_state = self.__oSounds.extra2_event(event, self.__mouse_x, self.__mouse_y)
+                if self.__new_extra2_state == None:
+                    self.__extra2_state, self.__extra_state = None, 'settings'
+                    self.__settings_touchable = True
         
         #--------------------INFO-------------------#
             if self.__extra_state == 'info':
@@ -245,6 +272,16 @@ class Application:
                 self.__oInfo.WebsiteJump(event, self.__mouse_x, self.__mouse_y)
                 if self.__new_extra_state == None:
                     self.__menu_touchable, self.__extra_state = True, None
+        
+        #------------------LOADFILE-----------------#
+            if self.__current_state == 'load_file':
+                self.__oLoadFile.load_file(event, self.__mouse_x, self.__mouse_y)
+                self.__play_process_flag = self.__oLoadFile.open_play_window(event, self.__mouse_x, self.__mouse_y)
+                self.songs = self.__oLoadFile.return_song()
+                self.songs = {"songs_names": self.songs}
+                if self.__play_process_flag:
+                    self.oData.dump_data('songs.json', self.songs)
+                    open_play()
 
     def __check_logic(self):
         pass
@@ -268,8 +305,12 @@ class Application:
                     self.__oGraphics.check_buttons(self.__mouse_x, self.__mouse_y)
                 if self.__extra2_state == 'sound':
                     self.__settings_touchable = False
+                    self.__oSounds.draw()
+                    self.__oSounds.check_buttons(self.__mouse_x, self.__mouse_y)
                 if self.__extra2_state == 'help':
                     self.__settings_touchable = False
+                    self.__oHelp.draw()
+                    self.__oHelp.check_buttons(self.__mouse_x, self.__mouse_y)
                 if self.__extra2_state == 'community':
                     self.__settings_touchable = False
                     self.__oCommunity.draw()
@@ -278,10 +319,30 @@ class Application:
                 self.__menu_touchable = False
                 self.__oInfo.draw()
                 self.__oInfo.check_buttons(self.__mouse_x, self.__mouse_y)
+        if self.__current_state == 'load_file':
+            #self.__menu_touchable = False
+            self.__oLoadFile.draw()
+            self.__oLoadFile.check_buttons(self.__mouse_x, self.__mouse_y)
 
 
         pygame.display.flip()
 
 
     def __del__(self):
+        close_play()
         pygame.quit()
+
+
+def close_play():
+    global play_process
+    if play_process and play_process.is_alive():
+        play_process.terminate()
+        play_process.join()
+        play_process = None
+
+def open_play():
+    global play_process
+    if play_process is None or not play_process.is_alive():
+        oPlayProcess = PlayProcess.PlayProcess()
+        play_process = mp.Process(target=oPlayProcess.run)
+        play_process.start()

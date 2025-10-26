@@ -1,78 +1,24 @@
-import pygame
-import webbrowser
-import threading
-from flask import Flask, render_template, request
+import os
 
-class FlaskApp:
-    def __init__(self):
-        self.app = Flask(__name__)
-        self.app.add_url_rule('/', 'home', self.home)
+# Временно переименовываем конфликтующую библиотеку в essentia
+essentia_lib_path = "/Users/DmitryKhramov/Desktop/SoundScope/.venv/lib/python3.13/site-packages/essentia/.dylibs/libSDL2-2.0.0.dylib"
+backup_path = "/Users/DmitryKhramov/Desktop/SoundScope/.venv/lib/python3.13/site-packages/essentia/.dylibs/libSDL2-2.0.0.dylib.backup"
 
-    def home(self):
-        return render_template('index.html')
+if os.path.exists(essentia_lib_path):
+    #os.rename(essentia_lib_path, backup_path)
+    print("Temporarily disabled essentia's SDL2 library")
 
-    def run(self):
-        self.app.run(debug=False)
+try:
+    import essentia
+    import pygame
+    # ... ваш код
+finally:
+    # Восстанавливаем обратно после завершения
+    if os.path.exists(backup_path):
+        #os.rename(backup_path, essentia_lib_path)
+        print("Restored essentia's SDL2 library")
 
-
-
-class PygameApp:
-    def __init__(self):
-        # Инициализация Pygame
-        pygame.init()
-
-        self.flask_app = FlaskApp()
-
-        # Установка размеров окна
-        self.width, self.height = 800, 600
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("Open HTML Page Example")
-
-        # Определение цветов
-        self.WHITE = (255, 255, 255)
-        self.BLUE = (0, 0, 255)
-
-        # Определение шрифта
-        self.font = pygame.font.Font(None, 36)
-
-        # Определение кнопки
-        self.button_rect = pygame.Rect(300, 250, 200, 50)
-        self.button_text = self.font.render("Open HTML Page", True, self.WHITE)
-
-    def run(self):
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-                # Проверка нажатия кнопки мыши
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1 and self.button_rect.collidepoint(event.pos):
-                        self.flask_app.run()
-                        webbrowser.open('http://127.0.0.1:5000/')  # URL вашего Flask-приложения
-
-            # Отрисовка фона и кнопки
-            self.screen.fill(self.BLUE)
-            pygame.draw.rect(self.screen, (0, 128, 255), self.button_rect)
-            self.screen.blit(self.button_text, (self.button_rect.x + 10, self.button_rect.y + 10))
-
-            # Обновление экрана
-            pygame.display.flip()
-
-        # Завершение работы Pygame
-        pygame.quit()
-
-def main():
-    flask_app = FlaskApp()
-    flask_thread = threading.Thread(target=flask_app.run)
-    flask_thread.start()
-
-    pygame_app = PygameApp()
-    pygame_app.run()
-
-    # После выхода из Pygame отправляем запрос на завершение Flask-сервера
-    requests.post('http://127.0.0.1:5000/shutdown')
-
-if __name__ == '__main__':
-    main()
+"""
+cd /Users/DmitryKhramov/Desktop/SoundScope
+DYLD_LIBRARY_PATH="/Users/DmitryKhramov/Desktop/SoundScope/.venv/lib/python3.13/site-packages/pygame/.dylibs" python3 app_test3.py
+"""
