@@ -1,3 +1,10 @@
 # Created by venv; see https://docs.python.org/3/library/venv.html
 
 .venv/
+.venv/lib/python3.13/site-packages/__pycache__/
+.venv/lib/python3.13/site-packages/_sounddevice_data/
+.venv/lib/python3.13/site-packages/cffi/
+.venv/lib/python3.13/site-packages/cffi-2.0.0.dist-info/
+.venv/lib/python3.13/site-packages/mutagen/
+.venv/lib/python3.13/site-packages/mutagen-1.47.0.dist-info/
+.venv/lib/python3.13/site-packages/PIL/
