@@ -9,8 +9,13 @@
 .venv/lib/python3.13/site-packages/mutagen-1.47.0.dist-info/
 .venv/lib/python3.13/site-packages/PIL/
 
+media/
 media/fonts/
 media/songs/
 media/sounds/
 media/sprites/
 songs/
+main.py
+app_test.py
+app_test2.py
+app_test3.py
