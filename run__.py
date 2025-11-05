@@ -1,6 +1,8 @@
 import app
 import sys
 
+DYLD_LIBRARY_PATH="/Users/DmitryKhramov/Desktop/SoundScope/.venv/lib/python3.13/site-packages/pygame/.dylibs"
+
 def main():
     oApp = app.Application()
 
@@ -10,7 +12,7 @@ def main():
         print('Programm Interrupted')
     finally:
         pass
-        sys.exit()
+        #sys.exit()
 
 
 if __name__ == "__main__":

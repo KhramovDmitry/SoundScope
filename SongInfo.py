@@ -16,7 +16,7 @@ class SongInfo:
         self.rhythm_extractor = RhythmExtractor2013()
         self.bpm, _, _, _, _ = self.rhythm_extractor(self.audio)
         if accuracy_flag:
-            return self.bpm
+            return round(self.bpm, 3)
         else:
             return round(self.bpm, 0)
     
@@ -35,6 +35,6 @@ class SongInfo:
         elif option == "scale":
             return self.scale
         elif option == "strength":
-            return self.strength
+            return int(round(self.strength, 2)*100)
         elif option == "all":
-            return [self.key, self.scale, self.strength]
+            return [self.key, self.scale, int(round(self.strength, 2)*100)]

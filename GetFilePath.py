@@ -41,3 +41,16 @@ class GetFilePath:
         self.file_path = os.path.join(self.current_path, 'templates', filename)
 
         return self.file_path
+    
+    def load_folder(self, foldername: str) -> str:
+        """
+        Метод находит точный путь к папке.
+
+        :param foldername: Название нужной вам папки.
+
+        :return: Точный путь к папке 'iCloud Drive/foldername'.
+        """
+
+        self.folder_path = os.path.join(self.current_path, foldername)
+
+        return self.folder_path

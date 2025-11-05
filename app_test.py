@@ -55,7 +55,7 @@ class AudioAnalyzer:
         #print(channels)
         try:
             with sd.InputStream(callback=audio_callback,
-                              channels=self.channels,
+                              channels=1,
                               samplerate=44100,
                               blocksize=1024,
                               device=self.device_id):  # Указываем конкретное устройство

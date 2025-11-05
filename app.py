@@ -1,10 +1,11 @@
-import pygame, time, multiprocessing as mp
+import pygame, time, multiprocessing as mp, random
 import ConfigWindow
-import Menu, Account, Settings, Community, Graphics, Help, Sounds, Info
+import Menu, Account, Settings, Community, Graphics, Help, Sounds, Info, CheckData
 import LoadFile
 import Data
 import PlayProcess
 from CleanInput import clean_input
+from CheckSRButtons import check_sr_buttons
 import config as c
 
 play_process = None
@@ -27,8 +28,15 @@ class Application:
         self.__previous_entry_event = c.previous_entry_event
         self.__graphics_event = None
         self.__graphics2_event = None
+        self.__loadfile_event = None
         self.__menu_touchable = True
         self.__settings_touchable = True
+        self.__loadfile_touchable = False
+        self.__loadfile_flag = False
+
+        self.__time_flag = 0
+        self.__time_flag_speed = 0
+        self.__loading = False
 
         #config.data
         self.oData = Data.Data()
@@ -78,8 +86,9 @@ class Application:
             self.__mouse_x, self.__mouse_y = pygame.mouse.get_pos()
 
             self.__check_logic()
-            self.__draw()
             self.__check_events()
+            self.__draw()
+            
 
     #check.events
     def __check_events(self):
@@ -120,8 +129,20 @@ class Application:
                         self.__graphics_event, self.__graphics2_event = None, None
                     if self.__extra_state == 'info':
                         self.__extra_state, self.__menu_touchable = None, True
-                    if self.__current_state == 'load_file':
+                    if self.__extra_state == 'help':
+                        self.__extra_state, self.__menu_touchable = None, True
+                    if self.__current_state == 'load_file' and self.__loadfile_touchable:
+                        del self.__oLoadFile
+                        try:
+                            del self.__oCheckData
+                        except Exception:
+                            pass
+                        self.__loadfile_flag = False
                         self.__current_state = 'menu'
+                    if self.__current_state == 'check_data':
+                        self.__loadfile_flag = True
+                        self.__loadfile_touchable = True
+                        self.__current_state = 'load_file'                        
 
         #--------------------MENU-------------------#
             if self.__current_state == 'menu':
@@ -130,8 +151,12 @@ class Application:
                     self.__current_state = 'my_playlist'
                 if self.__new_state == 'load_file':
                     self.__current_state = 'load_file'
+                    self.__oLoadFile = LoadFile.LoadFile(self.__screen)
+                    self.__loadfile_touchable = True
                 if self.__new_state == 'my_creations':
                     self.__current_state = 'my_creations'
+                if self.__new_state == 'exit':
+                    self.__work_end = True
 
                 self.__new_extra_state = self.__oMenu.extra_event(event=event, mouse_x=self.__mouse_x, mouse_y=self.__mouse_y, menu_touchable=self.__menu_touchable)
                 if self.__new_extra_state == 'account':
@@ -217,16 +242,58 @@ class Application:
                     self.__settings_touchable = True
                 if self.__new_graphics_event == '1':
                     self.__graphics_event = '1'
+                    check_sr_buttons(self.__oGraphics.sr1_button,
+                                         self.__oGraphics.sr2_button,
+                                         self.__oGraphics.sr3_button,
+                                         self.__oGraphics.fb_button,
+                                         self.__oGraphics.sy_button,
+                                         self.__oGraphics.sn_button,
+                                         self.__graphics_event)
                 if self.__new_graphics_event == '2':
                     self.__graphics_event = '2'
+                    check_sr_buttons(self.__oGraphics.sr1_button,
+                                         self.__oGraphics.sr2_button,
+                                         self.__oGraphics.sr3_button,
+                                         self.__oGraphics.fb_button,
+                                         self.__oGraphics.sy_button,
+                                         self.__oGraphics.sn_button,
+                                         self.__graphics_event)
                 if self.__new_graphics_event == '3':
                     self.__graphics_event = '3'
+                    check_sr_buttons(self.__oGraphics.sr1_button,
+                                         self.__oGraphics.sr2_button,
+                                         self.__oGraphics.sr3_button,
+                                         self.__oGraphics.fb_button,
+                                         self.__oGraphics.sy_button,
+                                         self.__oGraphics.sn_button,
+                                         self.__graphics_event)
                 if self.__new_graphics_event == '4':
                     self.__graphics_event = '4'
+                    check_sr_buttons(self.__oGraphics.sr1_button,
+                                         self.__oGraphics.sr2_button,
+                                         self.__oGraphics.sr3_button,
+                                         self.__oGraphics.fb_button,
+                                         self.__oGraphics.sy_button,
+                                         self.__oGraphics.sn_button,
+                                         self.__graphics_event)
                 if self.__new2_graphics_event == 'yes':
                     self.__graphics2_event = 'yes'
+                    check_sr_buttons(self.__oGraphics.sr1_button,
+                                         self.__oGraphics.sr2_button,
+                                         self.__oGraphics.sr3_button,
+                                         self.__oGraphics.fb_button,
+                                         self.__oGraphics.sy_button,
+                                         self.__oGraphics.sn_button,
+                                         self.__graphics2_event)
                 if self.__new2_graphics_event == 'no':
                     self.__graphics2_event = 'no'
+                    check_sr_buttons(self.__oGraphics.sr1_button,
+                                         self.__oGraphics.sr2_button,
+                                         self.__oGraphics.sr3_button,
+                                         self.__oGraphics.fb_button,
+                                         self.__oGraphics.sy_button,
+                                         self.__oGraphics.sn_button,
+                                         self.__graphics2_event)
 
                 if self.__save_event == 'SAVE':
                     if self.__graphics_event == '1':
@@ -275,16 +342,55 @@ class Application:
         
         #------------------LOADFILE-----------------#
             if self.__current_state == 'load_file':
-                self.__oLoadFile.load_file(event, self.__mouse_x, self.__mouse_y)
+                try:
+                    self.__oLoadFile.load_file(event, self.__mouse_x, self.__mouse_y)
+                except Exception:
+                    pass
+                self.__loadfile_event = self.__oLoadFile.check_events(event, self.__mouse_x, self.__mouse_y, touchable=self.__loadfile_touchable)
                 self.__play_process_flag = self.__oLoadFile.open_play_window(event, self.__mouse_x, self.__mouse_y)
                 self.songs = self.__oLoadFile.return_song()
+                self.song_path = self.songs[0]
                 self.songs = {"songs_names": self.songs}
                 if self.__play_process_flag:
+                    self.__loadfile_event = 'listen_file'
+                if self.__loadfile_event == 'add_song':
+                    pass
+                if self.__loadfile_event == 'check_data':
+                    self.__loadfile_touchable = False
+                    if self.__loadfile_flag:
+                        self.__current_state = 'check_data'
+                    else:
+                        pygame.mixer.music.set_volume(0.3)
+                        pygame.mixer.music.load(self.song_path)
+                        pygame.mixer.music.play(fade_ms=2000)
+                        self.__loading = True
+                        self.__time_flag_speed = 1
+                if self.__loadfile_event == 'listen_file':
                     self.oData.dump_data('songs.json', self.songs)
                     open_play()
+                if self.__loadfile_event == 'exit':
+                    del self.__oLoadFile
+                    try:
+                        del self.__oCheckData
+                    except Exception:
+                        pass
+                    self.__loadfile_touchable = False
+                    self.__loadfile_flag = False
+                    self.__current_state = 'menu'
+
 
     def __check_logic(self):
-        pass
+        self.__time_flag += self.__time_flag_speed
+        self.__predel = random.randint(350, 550)
+        if self.__time_flag > self.__predel:
+            self.__loading = False
+            self.__time_flag = 0
+            self.__time_flag_speed = 0
+            self.__oLoadFile.load_song_data()
+            self.__bpm, self.__ac_bpm, self.__key, self.__scale, self.__strength = self.__oLoadFile.return_song_data()
+            self.__oCheckData = CheckData.CheckData(self.__screen, self.__bpm, self.__ac_bpm, self.__key, self.__scale, self.__strength)
+            self.__current_state = 'check_data'
+            pygame.mixer.music.stop()
 
 
     def __draw(self):
@@ -320,9 +426,12 @@ class Application:
                 self.__oInfo.draw()
                 self.__oInfo.check_buttons(self.__mouse_x, self.__mouse_y)
         if self.__current_state == 'load_file':
-            #self.__menu_touchable = False
             self.__oLoadFile.draw()
-            self.__oLoadFile.check_buttons(self.__mouse_x, self.__mouse_y)
+            self.__oLoadFile.check_buttons(self.__mouse_x, self.__mouse_y, self.__loadfile_touchable)
+            if self.__loading and self.__time_flag != 0:
+                self.__oLoadFile.draw_loading()
+        if self.__current_state == 'check_data':
+            self.__oCheckData.draw()
 
 
         pygame.display.flip()

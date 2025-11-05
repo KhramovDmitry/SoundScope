@@ -30,43 +30,43 @@ class Graphics:
         self.mini_exit_button_rect = self.mini_exit_button.set_rect()
 
         self.sr1_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.b1_image,
                                               center_x=c.sr1b_x, center_y=c.sr1b_y,
                                               width=self.srb_width, height=self.srb_height,
                                               layername=c.screen_resolution_layer, smooth=c.smooth)
         self.sr1_button_rect = self.sr1_button.set_rect()
         self.sr2_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.b2_image,
                                               center_x=c.sr2b_x, center_y=c.sr2b_y,
                                               width=self.srb_width, height=self.srb_height,
                                               layername=c.screen_resolution_layer, smooth=c.smooth)
         self.sr2_button_rect = self.sr2_button.set_rect()
         self.sr3_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.b3_image,
                                               center_x=c.sr3b_x, center_y=c.sr3b_y,
                                               width=self.srb_width, height=self.srb_height,
                                               layername=c.screen_resolution_layer, smooth=c.smooth)
         self.sr3_button_rect = self.sr3_button.set_rect()
         self.fb_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.b4_image,
                                               center_x=c.fb_x, center_y=c.fb_y,
                                               width=self.srb_width, height=self.srb_height,
                                               layername=c.screen_resolution_layer, smooth=c.smooth)
         self.fb_button_rect = self.fb_button.set_rect()
         self.ab_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.accept_button,
                                               center_x=self.ab_x, center_y=self.ab_y,
                                               width=self.srb_width, height=self.srb_height,
-                                              layername=c.screen_resolution_layer, smooth=c.smooth)
+                                              layername=c.accept_button_layer, smooth=c.smooth)
         self.ab_button_rect = self.ab_button.set_rect()
         self.sy_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.b5_image,
                                               center_x=c.syt_x, center_y=c.syt_y,
                                               width=self.srb_width, height=self.srb_height,
                                               layername=c.screen_resolution_layer, smooth=c.smooth)
         self.sy_button_rect = self.sy_button.set_rect()
         self.sn_button = Button.Button(screen=self.screen,
-                                              filename=c.screen_resolution_button,
+                                              filename=c.b6_image,
                                               center_x=c.snt_x, center_y=c.snt_y,
                                               width=self.srb_width, height=self.srb_height,
                                               layername=c.screen_resolution_layer, smooth=c.smooth)
@@ -113,7 +113,7 @@ class Graphics:
             self.sn_button.button_predict()
 
     def buttons_event(self, event, mouse_x, mouse_y):
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.sr1_button_rect.collidepoint(mouse_x, mouse_y):
                 return '1'
             if self.sr2_button_rect.collidepoint(mouse_x, mouse_y):

@@ -15,3 +15,4 @@ class ScreenInfo:
         self.width, self.height = self.info_object.current_w, self.info_object.current_h
 
         return self.width, self.height
+        #return self.width - self.width//8, self.height - self.height//10

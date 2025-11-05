@@ -1,7 +1,7 @@
 import GetFilePath
 import ScreenInfo
 import Data
-import pygame
+import pygame, gif_pygame
 
 #load.data
 oData = Data.Data()
@@ -22,7 +22,6 @@ if data['screen_resolution'] == False:
 else:
     width, height = data['screen_resolution'].split()
     width, height = int(width)//2, int(height)//2
-#width, height = width//2, height//2
 Height = height
 height -= 62
 
@@ -39,6 +38,9 @@ current_state = 'menu'
 oGetFilePath = GetFilePath.GetFilePath()
 
 #config.colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
 SS_WHITE = (217, 240, 255)
 SS_BLUE = (130, 175, 225)
 SS_DARKBLUE = (92, 122, 158)
@@ -48,6 +50,10 @@ SS_LIGHTORANGE = (255, 213, 158)
 SS_LIGHTRED = (255, 193, 193)
 SS_LIGHTGREEN = (228, 255, 170)
 SS_LIGHTBLUE = (140, 209, 255)
+SS_CDGREEN = (175, 255, 0)
+SS_CDYELLOW = (253, 255, 0)
+SS_CDORANGE = (255, 145, 0)
+SS_CDRED = (255, 0, 4)
 
 #config.fonts
 TTC_eb_menu_size = int(width//26.5)*2
@@ -58,6 +64,7 @@ TTC_db_menu_size = int(width//87)*2
 TTC_db_community_size = int(width//72*1.2)
 TTC_l_community_size = int(width//72*0.95)
 TTC_db_graphics_size = int(width//69.12*2.25//1.25)
+TTC_eb_cd_size = int(width//69.12*2.4)
 TTC_extrabold_path = oGetFilePath.load_file('fonts', 'TTC_extrabold.otf')
 TTC_demibold_path = oGetFilePath.load_file('fonts', 'TTC_demibold.otf')
 TTC_regular_path = oGetFilePath.load_file('fonts', 'TTC_regular.otf')
@@ -70,9 +77,10 @@ TTC_demibold_menu = pygame.font.Font(TTC_demibold_path, (TTC_db_menu_size))
 TTC_demibold_community = pygame.font.Font(TTC_demibold_path, (TTC_db_community_size))
 TTC_light_community = pygame.font.Font(TTC_light_path, (TTC_l_community_size))
 TTC_demibold_graphics = pygame.font.Font(TTC_demibold_path, (TTC_db_graphics_size))
+TTC_extrabold_cd = pygame.font.Font(TTC_extrabold_path, (TTC_eb_cd_size))
+TTC_demibold_cd = pygame.font.Font(TTC_demibold_path, (TTC_r_menu_size))
 
 #---------------------------------M_E_N_U-------------------------------------------#
-
 menu_bg = oGetFilePath.load_file('sprites', 'bg.png')
 #big.buttons
 my_playlist_button = oGetFilePath.load_file('sprites', 'my_playlist_button.png')
@@ -83,13 +91,14 @@ light_button_layer = oGetFilePath.load_file('sprites', 'light_button_layer.png')
 account_button = oGetFilePath.load_file('sprites', 'account_button.png')
 settings_button = oGetFilePath.load_file('sprites', 'settings_button.png')
 info_button = oGetFilePath.load_file('sprites', 'info_button.png')
+escape_button = oGetFilePath.load_file('sprites', 'escape_button.png')
 light_button_layer2 = oGetFilePath.load_file('sprites', 'light_button_layer2.png')
 
 waveform = oGetFilePath.load_file('sprites', 'waveform.png')
 
 waveform_size = width, height
 
-mb1_size = width//5.5, width//5.5//1.6
+mb1_size = width//5.5, width//12.3
 mb2_size = width//10.2//2, width//9.6//2
 
 mpb_x, mpb_y = width//2 - width//5.5 - width//43.2, height//2 + height//20
@@ -98,6 +107,8 @@ mcb_x, mcb_y = width//2 + width//5.5 + width//43.2, height//2 + height//20
 ab_x, ab_y = width//2 - width//10.2//2 - width//90, height - width//9.6//2 + height//95
 sb_x, sb_y = width//2, height - width//9.6//2 + height//95
 ib_x, ib_y = width//2 + width//10.2//2 + width//90, height - width//9.6//2 + height//95
+
+escape_button_x, escape_button_y = width//25, width//25
 
 greet_1_text__ = 'SoundScope'
 greet_1_text = TTC_extrabold_menu.render(greet_1_text__, smooth, SS_WHITE)
@@ -196,10 +207,13 @@ telegram_button_x, telegram_button_y = width//2 + width//15, height//2 - height/
 telegram_link = 'https://t.me/SoundScope_news'
 max_link = 'https://max.ru/join/-3CCc-oSJwQwymE1Vfd-MMgYGy94BL7PV97Urrwx-JA'
 
-# GRAPHICS
+#-----------------------------G_R_A_P_H_I_C_S------------------------------#
 graphics_frame = oGetFilePath.load_file('sprites', 'graphics_frame.png')
-screen_resolution_button = oGetFilePath.load_file('sprites', 'screen_size_button.png')
-screen_resolution_layer = oGetFilePath.load_file('sprites', 'screen_size_layer.png')
+accept_button = oGetFilePath.load_file('sprites', 'screen_size_button.png')
+accept_button_layer = oGetFilePath.load_file('sprites', 'screen_size_layer.png')
+screen_resolution_button = oGetFilePath.load_file('sprites', 'pressed_screen_resolution_button.png')
+pressed_screen_resolution_button = oGetFilePath.load_file('sprites', 'screen_resolution_button.png')
+screen_resolution_layer = oGetFilePath.load_file('sprites', 'screen_resolution_layer.png')
 
 graphics_text__ = 'Графика'
 graphics_text = TTC_regular_menu.render(graphics_text__, smooth, SS_WHITE)
@@ -212,10 +226,24 @@ sr1b_text__ = f'{true_width - true_width//10} x {true_height - true_height//10}'
 sr2b_text__ = f'{true_width - true_width//5} x {true_height - true_height//5}'
 sr3b_text__ = f'{true_width - true_width//3} x {true_height - true_height//3}'
 fullscreen_text__ = 'original'
+
+screen_resolutions = [f'{true_width - true_width//10} {true_height - true_height//10}', 
+                      f'{true_width - true_width//5} {true_height - true_height//5}', 
+                      f'{true_width - true_width//3} {true_height - true_height//3}', 
+                      False]
+
 sr1b_text = TTC_demibold_graphics.render(sr1b_text__, smooth, SS_LIGHTORANGE)
 sr2b_text = TTC_demibold_graphics.render(sr2b_text__, smooth, SS_LIGHTRED)
 sr3b_text = TTC_demibold_graphics.render(sr3b_text__, smooth, SS_LIGHTGREEN)
 fullscreen_text = TTC_demibold_graphics.render(fullscreen_text__, smooth, SS_LIGHTBLUE)
+
+b1_image = pressed_screen_resolution_button if screen_resolution == screen_resolutions[0] else screen_resolution_button
+b2_image = pressed_screen_resolution_button if screen_resolution == screen_resolutions[1] else screen_resolution_button
+b3_image = pressed_screen_resolution_button if screen_resolution == screen_resolutions[2] else screen_resolution_button
+b4_image = pressed_screen_resolution_button if screen_resolution == screen_resolutions[3] else screen_resolution_button
+
+b5_image = pressed_screen_resolution_button if smooth else screen_resolution_button
+b6_image = screen_resolution_button if smooth else pressed_screen_resolution_button
 
 smooth_yes_text__ = 'Гладкие'
 smooth_yes_text = TTC_demibold_graphics.render(smooth_yes_text__, smooth, SS_LIGHTBLUE)
@@ -244,7 +272,7 @@ ab_pos = width//2, height//2 + height//5
 rt_pos = width//2, height//2 + height//3.9
 #------------------------------------------------------------------------#
 
-#----------------------------------HELP----------------------------------#
+#--------------------------------H_E_L_P---------------------------------#
 powered_by_python = oGetFilePath.load_file('sprites', 'pygame_logo.PNG')
 
 help_text__ = 'Помощь'
@@ -259,12 +287,12 @@ pbp_size = width//15.36, height//25.1
 pbp_pos = width//2 + width//6.5, height//2 + height//7
 #------------------------------------------------------------------------#
 
-#---------------------------------SOUNDS---------------------------------#
+#-------------------------------S_O_U_N_D_S------------------------------#
 sounds_text = TTC_regular_menu.render('Звук', smooth, SS_WHITE)
 on_text = '×'
 
 
-#----------------------------------INFO----------------------------------#
+#---------------------------------I_N_F_O--------------------------------#
 website_button = oGetFilePath.load_file('sprites', 'website_button.png')
 
 info_text__ = 'Информация'
@@ -280,13 +308,38 @@ website_size = width//30*2, width//30*2
 website_pos = width//2, height//2 - height//50
 #------------------------------------------------------------------------#
 
-#-------------------------------LOADFILE---------------------------------#
+#----------------------------L_O_A_D_F_I_L_E-----------------------------#
 choose_file_button = oGetFilePath.load_file('sprites', 'choose_file_button.png')
 choose_file_layer = oGetFilePath.load_file('sprites', 'choose_file_layer.png')
 error_cover = oGetFilePath.load_file('sprites', 'error_cover.png')
 cover_layer = oGetFilePath.load_file('sprites', 'cover_layer.png')
+listen_file_button = oGetFilePath.load_file('sprites', 'listen_file_button.png')
+add_song_button = oGetFilePath.load_file('sprites', 'add_song_button.png')
+check_data_button = oGetFilePath.load_file('sprites', 'check_data_button.png')
+file_button_layer = oGetFilePath.load_file('sprites', 'file_button_layer.png')
+
+SS_LOADING_GIF = gif_pygame.load(oGetFilePath.load_file('sprites', 'SS_LOADING_GIF.gif'))
+current_frame = SS_LOADING_GIF.blit_ready()
+gif_width, gif_height = current_frame.get_width(), current_frame.get_height()
+
+file_button_size = [width//5.5, width//5.5//2.5]
+fb1_pos = [width//2 - width//5, height//2 + height//8]
+fb2_pos = [width//2, height//2 + height//8]
+fb3_pos = [width//2 + width//5, height//2 + height//8]
+
 cfb_x, cfb_y = width//2, height//2
 cfb_width, cfb_height = width//5.5, height//7.2
+
+#check.data
+cd_glow_1 = oGetFilePath.load_file('sprites', 'cd_glow_1.png')
+cd_glow_2 = oGetFilePath.load_file('sprites', 'cd_glow_2.png')
+
+music_data_text = TTC_extrabold_cd.render('Музыкальные данные', smooth, (0, 152, 255))
+metadata_text = TTC_extrabold_cd.render('Метаданные', smooth, (255, 103, 105))
+bpm_text = TTC_demibold_cd.render('Темп:', smooth, SS_LIGHTBLUE)
+ac_bpm_text = TTC_demibold_cd.render('Точный темп:', smooth, SS_LIGHTBLUE)
+key_text = TTC_demibold_cd.render('Тональность:', smooth, SS_LIGHTBLUE)
+strength_text = TTC_demibold_cd.render('Точность предоставленных данных:', smooth, SS_LIGHTBLUE)
 
 #-----------------#
 play_process = None
