@@ -8,3 +8,6 @@
 .venv/lib/python3.13/site-packages/mutagen/
 .venv/lib/python3.13/site-packages/mutagen-1.47.0.dist-info/
 .venv/lib/python3.13/site-packages/PIL/
+
+media/
+songs/
